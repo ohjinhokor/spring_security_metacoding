@@ -26,23 +26,25 @@ public class IndexController {
 	}
 
 	@GetMapping("user")
+	@ResponseBody
 	public String user() {
 		return "user";
 	}
 
 	@GetMapping("admin")
+	@ResponseBody
 	public String admin() {
 		return "admin";
 	}
 
 	@GetMapping("manager")
+	@ResponseBody
 	public String manager() {
 		return "manager";
 	}
 
-	@GetMapping("login")
-	public String login() {
-		System.out.println("login");
+	@GetMapping("loginForm")
+	public String loginForm() {
 		return "loginForm";
 	}
 
@@ -53,7 +55,7 @@ public class IndexController {
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 		userRepository.save(user);
-		return "redirect:/login";
+		return "redirect:/loginForm";
 	}
 
 	@GetMapping("joinForm")
