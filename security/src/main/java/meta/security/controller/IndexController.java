@@ -5,7 +5,6 @@ import meta.security.entity.Role;
 import meta.security.entity.User;
 import meta.security.repository.UserRepository;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -74,7 +73,7 @@ public class IndexController {
 
 	@PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 //	@PostAuthorize() : 함수가 실행된 뒤에 확인
-	@GetMapping("/info")
+	@GetMapping("/info2")
 	public @ResponseBody String secretData() {
 		return "비밀 데이터";
 	}
