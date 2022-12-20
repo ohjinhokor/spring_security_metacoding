@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter // Entity에는 Setter를 붙이지 않는 것이 더 맞는 방법이라고 생각
 @Entity
 public class User {
+
 	@Id // primary key
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -27,6 +28,10 @@ public class User {
 
 	@Enumerated(EnumType.STRING)
 	private Role role; //ROLE_USER, ROLE_ADMIN
+
+	private String provider; // google ..
+
+	private String providerId;
 
 	@CreationTimestamp
 	private Timestamp createDate;
