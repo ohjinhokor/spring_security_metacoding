@@ -10,19 +10,40 @@ package meta.security.config.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import lombok.Getter;
 import meta.security.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 // 이렇게 UserDetails를 implements하면 Authentication안에 PrincipalDetails를 넣을 수 있음
 @Getter
-public class PrincipalDetails implements UserDetails {
+// Controller에서 Oauth로 로그인한 경우와 일반 로그인을 한 경우 모두를 커버하기 위해서는
+// PrincipalDetails가 UserDetails와 OAuth2User 모두를 implements 하는 것이 좋다
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
 	private User user; // 콤포지션
 
+	private Map<String, Object> attributes;
+
 	public PrincipalDetails(User user) {
 		this.user = user;
+	}
+
+	public PrincipalDetails(User user, Map<String, Object> attributes) {
+		this.user = user;
+		this.attributes = attributes;
+	}
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public String getName() {
+		return null;
 	}
 
 	// 해당 유저의 권한을 return 해야함
