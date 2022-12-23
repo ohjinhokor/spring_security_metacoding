@@ -1,5 +1,11 @@
 package meta.security.config.oauth;
 
+import meta.security.config.auth.PrincipalDetails;
+import meta.security.entity.Role;
+import meta.security.entity.User;
+import meta.security.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -8,6 +14,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	// '구글로부터 받은 userRequest 데이터에 대한 후처리'가 되는 함수
 	@Override
@@ -22,6 +34,28 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		// userRequest 정보로 -> 회원 프로필을 받아야 함(loadUser 함수를 통해서 회원 프로필을 받을 수 있음).
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 
-		return super.loadUser(userRequest);
+		String provider = userRequest.getClientRegistration().getRegistrationId(); // example) google....
+		String providerId = oAuth2User.getAttribute("sub");
+		String username = provider + "_" + providerId;
+		String password = bCryptPasswordEncoder.encode("겟인데어");
+		String email = oAuth2User.getAttribute("email");
+		Role role = Role.ROLE_USER;
+
+		User userEntity = userRepository.findByUsername(username);
+
+		if (userEntity == null) {
+			userEntity = User.builder()
+				.username(username)
+				.password(password)
+				.email(email)
+				.role(role)
+				.provider(provider)
+				.providerId(providerId)
+				.build();
+
+			userRepository.save(userEntity);
+		}
+
+		return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
 	}
 }
