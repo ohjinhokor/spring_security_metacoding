@@ -9,6 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import security_jwt.demo.filter.CustumFilter1;
+import security_jwt.demo.filter.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.addFilter(corsFilter)
 			.formLogin().disable()
+			.addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager
 			.httpBasic().disable()
 			.authorizeRequests()
 			.antMatchers("/api/v1/user/**")
@@ -33,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 			.antMatchers("api/v1/admin/**")
 			.access("hasRole('ROLE_ADMIN')")
-			.anyRequest().permitAll();
+			.anyRequest().permitAll()
+		;
 	}
 }

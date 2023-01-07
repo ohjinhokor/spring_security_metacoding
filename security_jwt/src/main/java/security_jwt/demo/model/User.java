@@ -1,12 +1,13 @@
 package security_jwt.demo.model;
 
-import java.util.List;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
 
 @Getter
+@Entity
 public class User {
 
 	@Id
@@ -17,5 +18,5 @@ public class User {
 
 	private String password;
 
-	private List<Role> roles;
+	private Role role;
 }
