@@ -17,7 +17,7 @@ public class CorsConfig {
 		config.setAllowCredentials(true); // 내 서버가 응답을 할 때 json을 자바스크립트에서 처리할 수 있게 할지를 결정하는 것.
 		config.addAllowedOrigin("*"); // 모든 ip에 응답을 허용함
 		config.addAllowedHeader("*"); // 모든 header에 응답을 허용함
-		config.addAllowedMethod("*"); // 모든 method에 응답을 허용함
+		config.addAllowedMethod("*"); // 모든 'http method'에 응답을 허용함
 		source.registerCorsConfiguration("/api/**", config);
 
 		return new CorsFilter(source);
